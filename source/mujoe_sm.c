@@ -29,7 +29,6 @@ static void reset_var( MUJOE_SM_CTX ctx );
 //  FUNCTIONS
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-
 void mujoe_sm_initCtx( MUJOE_SM_CTX ctx, mujoe_sm_cfg_t *pCfg )
 {
 	MUJOE_SM_MEMSET(ctx,0,sizeof(mujoe_sm_t));
