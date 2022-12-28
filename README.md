@@ -8,7 +8,33 @@ State machine intended for use with embedded systems.
 - State transitions via external, asynchronous triggers (e.g. ISRs, etc.)
 - External trigger timeout detection
 
-## Example
+## Quick start:
+
+The following code snippets are taken from the included example project (see the subsequent section).
+
+Create a global state machine context structure and initialize.
+
+```c
+
+// state machine context structure
+mujoe_sm_t uart_sm;     
+
+// state machine context configuration structure
+mujoe_sm_cfg_t cfg =
+{
+    .pStateTbl     = (mujoe_sm_state_Fp_t *)uart_sm_state_tbl,
+    .numStates     = UART_SM_NUM_STATES,
+    .pTransTbl     = (mujoe_sm_trans_t *)uart_sm_trans_tbl,
+    .numTrans      = sizeof(uart_sm_trans_tbl)/sizeof(mujoe_sm_trans_t),
+    .pHostVar      = &hostArg,
+};
+
+// initialize state machine context with configuration
+mujoe_sm_initCtx( &uart_sm, &cfg );
+
+```
+
+## Example:
 
 The *example* folder contains a Code Composer Studio (CCS) project targetting the Texas Instruments (TI) CC2640R2 microcontroller in
 the TI LAUNCHXL-CC2640R2 hardware design. The application project uses the TI BLE-Stack to setup a Bluetooth Low Energy (BLE) simple peripheral. The BLE-Stack uses TI's TI-RTOS for its scheduler, which the *mujoe_sm* driver uses to schedule deterministic state transitions. 
@@ -23,7 +49,7 @@ A terminal program (such as *PuTTY*) can be used for interfacing with the launch
 
 The UART state machine showcases the *mujoe_sm* API feature set, including: delayed state transitions, external trigger detection and external trigger timeout.
 
-## Example files
+## Example files:
 
 **Application project:** *example/simple_peripheral_cc2640r2lp_mujoe_sm.zip*
 
