@@ -28,3 +28,5 @@ The UART state machine showcases the *mujoe_sm* API feature set, including: dela
 **Application project:** *example/simple_peripheral_cc2640r2lp_mujoe_sm.zip*
 
 **BLE stack project:** *example/simple_peripheral_cc2640r2lp_stack_library.zip*
+
+**NOTE:** Must have TI's *Code Composer Studio* (version 10.2 or later) and the *Simplelink CC2640R2 SDK v5.30.00.03* installed on your computer.
