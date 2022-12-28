@@ -12,12 +12,50 @@ State machine intended for use with embedded systems.
 
 The following code snippets are taken from the included example project (see the subsequent section).
 
-Create a global state machine context structure and initialize.
+Create the state machine context, the state handler table, and the state transition table.
 
 ```c
 
-// state machine context structure
-mujoe_sm_t uart_sm;     
+// state machine context
+static mujoe_sm_t uart_sm;
+
+// state handler table
+const mujoe_sm_state_Fp_t uart_sm_state_tbl[UART_SM_NUM_STATES] =
+{
+     uart_idle,                     // UART_SM_STATE_IDLE
+     uart_awaitCmd,                 // UART_SM_STATE_AWT_CMD
+     uart_cmdReceived,              // UART_SM_STATE_CMD_RXD
+     uart_cmdTimeout,               // UART_SM_STATE_CMD_TIMEOUT
+};
+
+// state machine transition table
+static const mujoe_sm_trans_t uart_sm_trans_tbl[] =
+{
+   // Current State ----------------------- Return Code --------------------------------------------------------- Next State
+
+   // UART_SM_STATE_IDLE rules
+   {  .curr = UART_SM_STATE_IDLE,          .code = UART_SM_RET_CODE_LISTEN_FOR_CMD,                              .next = UART_SM_STATE_AWT_CMD },
+
+   // UART_SM_STATE_AWT_CMD rules
+   {  .curr = UART_SM_STATE_AWT_CMD,       .code = MUJOE_SM_RET_CODE_EXT_TRIG_RXD | UART_SM_RET_CODE_CMD_RXD,    .next = UART_SM_STATE_CMD_RXD },
+   {  .curr = UART_SM_STATE_AWT_CMD,       .code = MUJOE_SM_RET_CODE_TIMEOUT | UART_SM_RET_CODE_CMD_RXD,         .next = UART_SM_STATE_CMD_TIMEOUT },
+
+   // UART_SM_STATE_CMD_RXD rules
+   {  .curr = UART_SM_STATE_CMD_RXD,       .code = UART_SM_RET_CODE_SUCCESS,                                     .next = UART_SM_STATE_AWT_CMD },
+
+   // UART_SM_STATE_CMD_TIMEOUT rules
+   {  .curr = UART_SM_STATE_CMD_TIMEOUT,   .code = UART_SM_RET_CODE_SUCCESS,                                     .next = UART_SM_STATE_AWT_CMD },
+
+};
+
+```
+
+The state handler table contains the callback functions for each state and the state transition table contains the transition rules for each state
+based on the code returned by the current state's state handler callback function.
+
+Initialize the state machine context structure.
+
+```c
 
 // state machine context configuration structure
 mujoe_sm_cfg_t cfg =
@@ -34,7 +72,7 @@ mujoe_sm_initCtx( &uart_sm, &cfg );
 
 ```
 
-Register host callback functions with *mujoe_sm* context.
+Register host callback functions with the state machine context.
 
 ```c
 
