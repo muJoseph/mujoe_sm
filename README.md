@@ -34,6 +34,22 @@ mujoe_sm_initCtx( &uart_sm, &cfg );
 
 ```
 
+Register host callback functions with *mujoe_sm* context.
+
+```c
+
+// host callbacks
+static const mujoe_sm_Cbs_t mujoe_sm_Cbs =
+{
+     .error = mujoe_sm_error_CB,        // error handler
+     .trans = mujoe_sm_trans_CB,        // state transition handler
+}; 
+
+// register callbacks with state machine context
+mujoe_sm_registerCallbacks( &uart_sm, &mujoe_sm_Cbs );
+
+```
+
 ## Example:
 
 The *example* folder contains a Code Composer Studio (CCS) project targetting the Texas Instruments (TI) CC2640R2 microcontroller in
