@@ -88,6 +88,26 @@ mujoe_sm_registerCallbacks( &uart_sm, &mujoe_sm_Cbs );
 
 ```
 
+Start the state machine.
+
+```c
+int delay_ms = 100;
+mujoe_sm_start( &uart_sm, delay_ms );
+
+```
+
+Invoke *mujoe_sm_run* when the app-specific event/semaphore is raised by the *mujoe_sm_trans_Fp_t* callback within your scheduler.
+
+```c
+
+// uart state machine RTOS event
+if (events & SBP_UART_SM_EVT)
+{
+    mujoe_sm_run( &uart_sm );
+}
+
+```
+
 ## Example:
 
 The *example* folder contains a Code Composer Studio (CCS) project targetting the Texas Instruments (TI) CC2640R2 microcontroller in
