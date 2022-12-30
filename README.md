@@ -108,6 +108,18 @@ if (events & SBP_UART_SM_EVT)
 
 ```
 
+Call *mujoe_sm_trigger* to notify state machine of external, asynchronous events.
+
+```c
+
+void uart_driver_read_CB( UART_Handle handle, void *buf, size_t count)
+{
+   // Fire trigger to notify state machine that UART peripheral has received new bytes
+   mujoe_sm_trigger( &uart_sm, UART_SM_RET_CODE_CMD_RXD );
+}
+
+```
+
 ## Example:
 
 The *example* folder contains a Code Composer Studio (CCS) project targetting the Texas Instruments (TI) CC2640R2 microcontroller in
